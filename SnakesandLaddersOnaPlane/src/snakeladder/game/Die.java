@@ -21,6 +21,9 @@ public class Die extends Actor
     {
       setActEnabled(false);
       np.startMoving(nb);
+      
+      //np.checkPuppetPositions(nb);
+      
     }
   }
 

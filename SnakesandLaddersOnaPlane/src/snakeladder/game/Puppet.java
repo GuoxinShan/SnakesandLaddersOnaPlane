@@ -58,6 +58,27 @@ public class Puppet extends Actor
   int getCellIndex() {
     return cellIndex;
   }
+  
+  //move puppet backforward one cell
+  private void moveBack(){
+    int tens = cellIndex / 10;
+    int ones = cellIndex - tens * 10;
+    if (tens % 2 == 0)     // Cells starting left 01, 21, .. 81
+    {
+      if (ones == 1 && cellIndex > 0)
+        setLocation(new Location(getX(), getY()+1 ));
+      else
+        setLocation(new Location(getX()-1, getY()));
+    }
+    else     // Cells starting left 20, 40, .. 100
+    {
+      if (ones == 1)
+        setLocation(new Location(getX(), getY()+1));
+      else
+        setLocation(new Location(getX()+1, getY() ));
+    }
+    cellIndex--;
+  }
 
   private void moveToNextCell()
   {
@@ -78,6 +99,37 @@ public class Puppet extends Actor
         setLocation(new Location(getX() - 1, getY()));
     }
     cellIndex++;
+  }
+
+  private void startAtConnection(){
+    if (nbSteps == 0)
+    {
+      // Check if on connection start
+      if ((currentCon = gamePane.getConnectionAt(getLocation())) != null)
+      {
+        gamePane.setSimulationPeriod(50);
+        y = gamePane.toPoint(currentCon.locStart).y;
+        if (currentCon.locEnd.y > currentCon.locStart.y)
+          dy = gamePane.animationStep;
+        else
+          dy = -gamePane.animationStep;
+        if (currentCon instanceof Snake)
+        {
+          navigationPane.showStatus("Digesting...");
+          navigationPane.playSound(GGSound.MMM);
+        }
+        else
+        {
+          navigationPane.showStatus("Climbing...");
+          navigationPane.playSound(GGSound.BOING);
+        }
+      }
+      else
+      {
+        setActEnabled(false);
+        navigationPane.prepareRoll(cellIndex);
+      }
+    }
   }
 
   public void act()
@@ -111,10 +163,17 @@ public class Puppet extends Actor
         setLocationOffset(new Point(0, 0));
         currentCon = null;
         navigationPane.prepareRoll(cellIndex);
+        
       }
       return;
     }
 
+    if(nbSteps == -1){
+      moveBack();
+      nbSteps++;
+      startAtConnection();
+    }
+    
     // Normal movement
     if (nbSteps > 0)
     {
@@ -128,34 +187,7 @@ public class Puppet extends Actor
       }
 
       nbSteps--;
-      if (nbSteps == 0)
-      {
-        // Check if on connection start
-        if ((currentCon = gamePane.getConnectionAt(getLocation())) != null)
-        {
-          gamePane.setSimulationPeriod(50);
-          y = gamePane.toPoint(currentCon.locStart).y;
-          if (currentCon.locEnd.y > currentCon.locStart.y)
-            dy = gamePane.animationStep;
-          else
-            dy = -gamePane.animationStep;
-          if (currentCon instanceof Snake)
-          {
-            navigationPane.showStatus("Digesting...");
-            navigationPane.playSound(GGSound.MMM);
-          }
-          else
-          {
-            navigationPane.showStatus("Climbing...");
-            navigationPane.playSound(GGSound.BOING);
-          }
-        }
-        else
-        {
-          setActEnabled(false);
-          navigationPane.prepareRoll(cellIndex);
-        }
-      }
+      startAtConnection();
     }
   }
 

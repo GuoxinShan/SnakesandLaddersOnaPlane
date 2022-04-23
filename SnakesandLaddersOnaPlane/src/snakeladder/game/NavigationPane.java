@@ -283,6 +283,7 @@ public class NavigationPane extends GameGrid
       showStatus("Done. Click the hand!");
       String result = gp.getPuppet().getPuppetName() + " - pos: " + currentIndex;
       showResult(result);
+      checkPuppetPositions(currentIndex);
       gp.switchToNextPuppet();
       // System.out.println("current puppet - auto: " + gp.getPuppet().getPuppetName() + "  " + gp.getPuppet().isAuto() );
 
@@ -302,7 +303,20 @@ public class NavigationPane extends GameGrid
     showPips("Pips: " + nb);
     showScore("# Rolls: " + (++nbRolls));
     gp.getPuppet().go(nb);
+
   }
+
+  //check if any puppet is at the same position as the current puppet
+  //if so,move the puppet back 1 step
+  void checkPuppetPositions(int index)
+  {
+    for (Puppet puppet: gp.getAllPuppets()) {
+      if (puppet.getCellIndex() == index && puppet.getPuppetName() != gp.getPuppet().getPuppetName()&& puppet.getCellIndex() != 0) {
+        puppet.go(-1);
+      }
+    }
+  }
+  
 
   void prepareBeforeRoll() {
     handBtn.setEnabled(false);
@@ -312,6 +326,8 @@ public class NavigationPane extends GameGrid
       nbRolls = 0;
     }
   }
+
+  
 
   public void buttonClicked(GGButton btn)
   {
@@ -332,6 +348,7 @@ public class NavigationPane extends GameGrid
     removeActors(Die.class);
     Die die = new Die(nb, this);
     addActor(die, dieBoardLocation);
+    
   }
 
   public void buttonPressed(GGButton btn)

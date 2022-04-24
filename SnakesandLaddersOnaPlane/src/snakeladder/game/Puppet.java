@@ -20,8 +20,6 @@ public class Puppet extends Actor
   //user rolling statistics
   public Map<Integer, Integer> userRollingStatistics = new HashMap<Integer,Integer>();
   public Map<String,Integer> connectionStatistics = new HashMap<String,Integer>();
-  public String rollingResult = "";
-  public String connectionResult = "";
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
@@ -55,7 +53,9 @@ public class Puppet extends Actor
       setLocation(gamePane.startLocation);
     }
     this.nbSteps = nbSteps;
-    updateUserRollingStatistics(nbSteps);
+    if(nbSteps >0){
+      updateUserRollingStatistics(nbSteps);
+    }
     setActEnabled(true);
   }
 
@@ -85,16 +85,13 @@ public class Puppet extends Actor
     } else {
       connectionStatistics.put("down", connectionStatistics.get("down") + 1);
     }
-    connectionResult = puppetName+" traversed: up-"+connectionStatistics.get("up")+" down-"+connectionStatistics.get("down");
+    
   }
 
   private void updateUserRollingStatistics(int diceValue) {
     int count = userRollingStatistics.get(diceValue);
     userRollingStatistics.put(diceValue, count + 1);
-    rollingResult = puppetName+" rolled :";
-    for(int i=1;i<=12;i++) {
-      rollingResult += rollingResult + i + "-" + userRollingStatistics.get(i) + " ";
-    }
+    
   }
   
   //move puppet backforward one cell

@@ -268,11 +268,20 @@ public class NavigationPane extends GameGrid
       playSound(GGSound.FADE);
       showStatus("Click the hand!");
       showResult("Game over");
+      
       isGameOver = true;
       handBtn.setEnabled(true);
 
       java.util.List  <String> playerPositions = new ArrayList<>();
       for (Puppet puppet: gp.getAllPuppets()) {
+        String rollingResult = puppet.getPuppetName()+" rolled :";
+        for(int i=1;i<=12;i++) {
+          rollingResult = rollingResult + i + "-" + puppet.userRollingStatistics.get(i) + " ";
+        }
+        String connectionResult = puppet.getPuppetName()+" traversed: up-"+puppet.connectionStatistics.get("up")+" down-"+puppet.connectionStatistics.get("down");
+        showResult(rollingResult);
+        showResult(connectionResult);
+
         playerPositions.add(puppet.getCellIndex() + "");
       }
       gamePlayCallback.finishGameWithResults(nbRolls % gp.getNumberOfPlayers(), playerPositions);

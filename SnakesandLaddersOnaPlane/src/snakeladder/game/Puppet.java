@@ -2,6 +2,8 @@ package snakeladder.game;
 
 import ch.aplu.jgamegrid.*;
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Puppet extends Actor
 {
@@ -15,11 +17,18 @@ public class Puppet extends Actor
   private boolean isAuto;
   private String puppetName;
 
+  //user rolling statistics
+  public Map<Integer, Integer> userRollingStatistics = new HashMap<Integer,Integer>();
+  public Map<String,Integer> connectionStatistics = new HashMap<String,Integer>();
+  public String rollingResult = "";
+  public String connectionResult = "";
+
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
     super(puppetImage);
     this.gamePane = gp;
     this.navigationPane = np;
+    initializeStatistics();
   }
 
   public boolean isAuto() {
@@ -46,6 +55,7 @@ public class Puppet extends Actor
       setLocation(gamePane.startLocation);
     }
     this.nbSteps = nbSteps;
+    updateUserRollingStatistics(nbSteps);
     setActEnabled(true);
   }
 
@@ -57,6 +67,34 @@ public class Puppet extends Actor
 
   int getCellIndex() {
     return cellIndex;
+  }
+
+  //initialize user rolling statistics
+  private void initializeStatistics() {
+    for (int i = 1; i <= 12; i++) {
+      userRollingStatistics.put(i, 0);
+    }
+    connectionStatistics.put("up", 0);
+    connectionStatistics.put("down", 0);
+    
+  }
+
+  private void updateConnectionStatistics(boolean isUp) {
+    if (isUp) {
+      connectionStatistics.put("up", connectionStatistics.get("up") + 1);
+    } else {
+      connectionStatistics.put("down", connectionStatistics.get("down") + 1);
+    }
+    connectionResult = puppetName+" traversed: up-"+connectionStatistics.get("up")+" down-"+connectionStatistics.get("down");
+  }
+
+  private void updateUserRollingStatistics(int diceValue) {
+    int count = userRollingStatistics.get(diceValue);
+    userRollingStatistics.put(diceValue, count + 1);
+    rollingResult = puppetName+" rolled :";
+    for(int i=1;i<=12;i++) {
+      rollingResult += rollingResult + i + "-" + userRollingStatistics.get(i) + " ";
+    }
   }
   
   //move puppet backforward one cell
@@ -117,11 +155,13 @@ public class Puppet extends Actor
         {
           navigationPane.showStatus("Digesting...");
           navigationPane.playSound(GGSound.MMM);
+          updateConnectionStatistics(false);
         }
         else
         {
           navigationPane.showStatus("Climbing...");
           navigationPane.playSound(GGSound.BOING);
+          updateConnectionStatistics(true);
         }
       }
       else

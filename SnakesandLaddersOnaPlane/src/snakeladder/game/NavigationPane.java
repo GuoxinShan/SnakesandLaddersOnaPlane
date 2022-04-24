@@ -259,6 +259,7 @@ public class NavigationPane extends GameGrid
     resultField.setText(text);
     System.out.println("Result: " + text);
   }
+  
 
   void prepareRoll(int currentIndex)
   {

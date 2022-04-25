@@ -15,18 +15,19 @@ public class NavigationPane extends GameGrid
 {
   private class SimulatedPlayer extends Thread
   {
-    public void run()
-    {
-      while (true)
-      {
+    public void run() {
+      while (true) {
         Monitor.putSleep();
         handBtn.show(1);
         roll(getDieValue());
         delay(1000);
-        handBtn.show(0);}
+        handBtn.show(0);
+      }
     }
 
   }
+
+
 
   private final int DIE1_BUTTON_TAG = 1;
   private final int DIE2_BUTTON_TAG = 2;
@@ -213,8 +214,6 @@ public class NavigationPane extends GameGrid
       }
     });
 
-
-
     addDieButtons();
 
     pipsField = new GGTextField(this, "", pipsLocation, false);
@@ -312,15 +311,22 @@ public class NavigationPane extends GameGrid
     }
   }
 
+  private void autoSwitch(){
+    if(gp.getPuppet().isAuto()){
+      if(gp.shouldSwitch()){
+        isToggle = !isToggle;
+        toggleCheck.setChecked(isToggle);
+        gp.switchRoles();}
+    }
+  }
+
   void startMoving(int nb)
   {
     showStatus("Moving...");
     showPips("Pips: " + nb);
     showScore("# Rolls: " + (++nbRolls));
     gp.getPuppet().go(nb);
-    if(gp.shouldSwitch()){
-      isToggle = !isToggle;
-    };
+    autoSwitch();
   }
 
   //check if any puppet is at the same position as the current puppet

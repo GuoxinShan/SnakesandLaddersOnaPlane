@@ -15,7 +15,7 @@ public class GamePane extends GameGrid
   private int currentPuppetIndex = 0;
   private List<Puppet> puppets =  new ArrayList<>();
   private List<Boolean> playerManualMode;
-  private ArrayList<Connection> connections = new ArrayList<Connection>();
+  public ArrayList<Connection> connections = new ArrayList<Connection>();
   final Location startLocation = new Location(-1, 9);  // outside grid
   final int animationStep = 10;
   public static final int NUMBER_HORIZONTAL_CELLS = 10;
@@ -132,7 +132,11 @@ public class GamePane extends GameGrid
 
   public void switchRoles(){
     for(Connection con: connections) {
-      con.switchRoles();}
+      con.switchRoles();
+    }
+    for (Puppet pup: puppets){
+      pup.setGamePane(this);
+    }
   }
 
   public boolean shouldSwitch() {
@@ -145,15 +149,15 @@ public class GamePane extends GameGrid
     int downs = 0;
     //array of possible locations of opponent
     for (int i = 1; i <= 6; i++) {
-      //possibleLocations[i] = cellToLocation(cells);
-      Connection con = getConnectionAt(cellToLocation(oppLocation + i));
-      if (con.isUp()) {
-        ups++;
-      } else {
-        downs++;} }
+      Connection cons = getConnectionAt(cellToLocation(oppLocation + i));
+      if(cons!=null){
+        if (cons.isUp()) {
+          ups++;
+        } else {
+          downs++;} }
+    }
     if (ups >= downs) {
       return true;}
-
     return false;
   }
 

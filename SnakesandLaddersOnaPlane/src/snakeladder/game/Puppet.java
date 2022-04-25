@@ -86,15 +86,15 @@ public class Puppet extends Actor
     } else {
       connectionStatistics.put("down", connectionStatistics.get("down") + 1);
     }
-    
+
   }
 
   private void updateUserRollingStatistics(int diceValue) {
     int count = userRollingStatistics.get(diceValue);
     userRollingStatistics.put(diceValue, count + 1);
-    
+
   }
-  
+
   //move puppet backforward one cell
   private void moveBack(){
     int tens = cellIndex / 10;
@@ -184,7 +184,8 @@ public class Puppet extends Actor
     }
 
     // Animation: Move on connection
-    if (currentCon != null)
+    if (currentCon != null && (currentCon instanceof Ladder || !navigationPane.isMinimumNb()))
+    //if (currentCon != null)
     {
       int x = gamePane.x(y, currentCon);
       setPixelLocation(new Point(x, y));
@@ -192,7 +193,7 @@ public class Puppet extends Actor
 
       // Check end of connection
       if ((dy > 0 && (y - gamePane.toPoint(currentCon.locEnd).y) > 0)
-        || (dy < 0 && (y - gamePane.toPoint(currentCon.locEnd).y) < 0))
+              || (dy < 0 && (y - gamePane.toPoint(currentCon.locEnd).y) < 0))
       {
         gamePane.setSimulationPeriod(100);
         setActEnabled(false);
@@ -201,7 +202,7 @@ public class Puppet extends Actor
         setLocationOffset(new Point(0, 0));
         currentCon = null;
         navigationPane.prepareRoll(cellIndex);
-        
+
       }
       return;
     }
@@ -211,7 +212,7 @@ public class Puppet extends Actor
       nbSteps++;
       startAtConnection();
     }
-    
+
     // Normal movement
     if (nbSteps > 0)
     {

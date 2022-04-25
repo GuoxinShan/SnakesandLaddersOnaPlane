@@ -11,7 +11,7 @@ import java.util.Properties;
 
 @SuppressWarnings("serial")
 public class NavigationPane extends GameGrid
-  implements GGButtonListener
+        implements GGButtonListener
 {
   private class SimulatedPlayer extends Thread
   {
@@ -26,8 +26,6 @@ public class NavigationPane extends GameGrid
     }
 
   }
-
-
 
   private final int DIE1_BUTTON_TAG = 1;
   private final int DIE2_BUTTON_TAG = 2;
@@ -78,6 +76,10 @@ public class NavigationPane extends GameGrid
           new GGCheckButton("Toggle Mode", YELLOW, TRANSPARENT, isToggle);
 
   private int nbRolls = 0;
+  private int nbRollsAtThisTurn = 0;
+  private int totalNbAtThisTurn = 0;
+
+  private int numberOfDice = 0;
   private volatile boolean isGameOver = false;
   private Properties properties;
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
@@ -86,7 +88,7 @@ public class NavigationPane extends GameGrid
   NavigationPane(Properties properties)
   {
     this.properties = properties;
-    int numberOfDice =  //Number of six-sided dice
+    numberOfDice =  //Number of six-sided dice
             (properties.getProperty("dice.count") == null)
                     ? 1  // default
                     : Integer.parseInt(properties.getProperty("dice.count"));
@@ -263,7 +265,7 @@ public class NavigationPane extends GameGrid
     resultField.setText(text);
     System.out.println("Result: " + text);
   }
-  
+
 
   void prepareRoll(int currentIndex)
   {
@@ -272,7 +274,7 @@ public class NavigationPane extends GameGrid
       playSound(GGSound.FADE);
       showStatus("Click the hand!");
       showResult("Game over");
-      
+
       isGameOver = true;
       handBtn.setEnabled(true);
 
@@ -297,8 +299,15 @@ public class NavigationPane extends GameGrid
       showStatus("Done. Click the hand!");
       String result = gp.getPuppet().getPuppetName() + " - pos: " + currentIndex;
       showResult(result);
-      checkPuppetPositions(currentIndex);
-      gp.switchToNextPuppet();
+
+      if (isReadyForMove()) {
+        gp.switchToNextPuppet();
+        nbRollsAtThisTurn = 0;
+        totalNbAtThisTurn = 0;
+      }
+
+      //checkPuppetPositions(currentIndex);
+
       // System.out.println("current puppet - auto: " + gp.getPuppet().getPuppetName() + "  " + gp.getPuppet().isAuto() );
 
       if (isAuto) {
@@ -309,6 +318,13 @@ public class NavigationPane extends GameGrid
         handBtn.setEnabled(true);
       }
     }
+  }
+
+  boolean isReadyForMove() {
+    return nbRollsAtThisTurn == numberOfDice;
+  }
+  boolean isMinimumNb() {
+    return totalNbAtThisTurn == numberOfDice;
   }
 
   private void autoSwitch(){
@@ -322,11 +338,14 @@ public class NavigationPane extends GameGrid
 
   void startMoving(int nb)
   {
-    showStatus("Moving...");
-    showPips("Pips: " + nb);
-    showScore("# Rolls: " + (++nbRolls));
-    gp.getPuppet().go(nb);
-    autoSwitch();
+    if (isReadyForMove()) {
+      showStatus("Moving...");
+      showPips("Pips: " + totalNbAtThisTurn);
+      showScore("# Rolls: " + nbRolls);
+      gp.getPuppet().go(totalNbAtThisTurn);
+    } else {
+      prepareRoll(gp.getPuppet().getCellIndex());
+    }
   }
 
   //check if any puppet is at the same position as the current puppet
@@ -339,7 +358,7 @@ public class NavigationPane extends GameGrid
       }
     }
   }
-  
+
 
   void prepareBeforeRoll() {
     handBtn.setEnabled(false);
@@ -367,10 +386,14 @@ public class NavigationPane extends GameGrid
     showStatus("Rolling...");
     showPips("");
 
+    nbRolls++;
+    nbRollsAtThisTurn++;
+    totalNbAtThisTurn += nb;
+
     removeActors(Die.class);
     Die die = new Die(nb, this);
     addActor(die, dieBoardLocation);
-    
+
   }
 
   public void buttonPressed(GGButton btn)

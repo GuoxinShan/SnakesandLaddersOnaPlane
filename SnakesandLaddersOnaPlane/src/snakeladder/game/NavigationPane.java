@@ -301,12 +301,13 @@ public class NavigationPane extends GameGrid
       showResult(result);
 
       if (isReadyForMove()) {
+        checkPuppetPositions(currentIndex);
         gp.switchToNextPuppet();
         nbRollsAtThisTurn = 0;
         totalNbAtThisTurn = 0;
       }
 
-      //checkPuppetPositions(currentIndex);
+      
 
       // System.out.println("current puppet - auto: " + gp.getPuppet().getPuppetName() + "  " + gp.getPuppet().isAuto() );
 

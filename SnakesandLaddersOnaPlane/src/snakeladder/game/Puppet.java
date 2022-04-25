@@ -28,6 +28,9 @@ public class Puppet extends Actor
     this.navigationPane = np;
     initializeStatistics();
   }
+  public void setGamePane(GamePane gp){
+    this.gamePane = gp;
+  }
 
   public boolean isAuto() {
     return isAuto;
@@ -58,14 +61,13 @@ public class Puppet extends Actor
     }
     setActEnabled(true);
   }
-
   void resetToStartingPoint() {
     cellIndex = 0;
     setLocation(gamePane.startLocation);
     setActEnabled(true);
   }
 
-  int getCellIndex() {
+  public int getCellIndex() {
     return cellIndex;
   }
 
@@ -76,7 +78,6 @@ public class Puppet extends Actor
     }
     connectionStatistics.put("up", 0);
     connectionStatistics.put("down", 0);
-    
   }
 
   private void updateConnectionStatistics(boolean isUp) {

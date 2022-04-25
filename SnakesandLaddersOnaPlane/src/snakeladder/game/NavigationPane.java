@@ -15,19 +15,19 @@ public class NavigationPane extends GameGrid
 {
   private class SimulatedPlayer extends Thread
   {
-    public void run()
-    {
-      while (true)
-      {
+    public void run() {
+      while (true) {
         Monitor.putSleep();
         handBtn.show(1);
-       roll(getDieValue());
+        roll(getDieValue());
         delay(1000);
         handBtn.show(0);
       }
     }
 
   }
+
+
 
   private final int DIE1_BUTTON_TAG = 1;
   private final int DIE2_BUTTON_TAG = 2;
@@ -76,6 +76,7 @@ public class NavigationPane extends GameGrid
   private boolean isToggle = false;
   private GGCheckButton toggleCheck =
           new GGCheckButton("Toggle Mode", YELLOW, TRANSPARENT, isToggle);
+
   private int nbRolls = 0;
   private volatile boolean isGameOver = false;
   private Properties properties;
@@ -203,10 +204,13 @@ public class NavigationPane extends GameGrid
     });
 
     addActor(toggleCheck, toggleModeLocation);
+
+    //listens to toggle mode and switches rolls
     toggleCheck.addCheckButtonListener(new GGCheckButtonListener() {
       @Override
       public void buttonChecked(GGCheckButton ggCheckButton, boolean checked) {
         isToggle = checked;
+        gp.switchRoles();
       }
     });
 
@@ -307,13 +311,22 @@ public class NavigationPane extends GameGrid
     }
   }
 
+  private void autoSwitch(){
+    if(gp.getPuppet().isAuto()){
+      if(gp.shouldSwitch()){
+        isToggle = !isToggle;
+        toggleCheck.setChecked(isToggle);
+        gp.switchRoles();}
+    }
+  }
+
   void startMoving(int nb)
   {
     showStatus("Moving...");
     showPips("Pips: " + nb);
     showScore("# Rolls: " + (++nbRolls));
     gp.getPuppet().go(nb);
-
+    autoSwitch();
   }
 
   //check if any puppet is at the same position as the current puppet
@@ -337,7 +350,6 @@ public class NavigationPane extends GameGrid
     }
   }
 
-  
 
   public void buttonClicked(GGButton btn)
   {

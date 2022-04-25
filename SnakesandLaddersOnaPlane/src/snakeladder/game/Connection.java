@@ -41,4 +41,21 @@ public abstract class Connection
   public double yLocationPercent(int locationCell) {
     return (double) locationCell / GamePane.NUMBER_VERTICAL_CELLS;
   }
+
+  public void switchRoles(){
+    //switch roles of snakes and ladders
+    int defaultStart = this.cellStart;
+    int defaultEnd = this.cellEnd;
+    this.cellEnd = defaultStart;
+    this.cellStart = defaultEnd;
+    this.locStart = GamePane.cellToLocation(cellStart);
+    this.locEnd = GamePane.cellToLocation(cellEnd);
+  }
+
+  public boolean isUp(){
+    if(cellStart<cellEnd){
+      return true;}
+    return false;
+  }
+
 }

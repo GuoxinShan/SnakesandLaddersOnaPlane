@@ -130,4 +130,35 @@ public class GamePane extends GameGrid
     return (int)(a * y + b);
   }
 
+  public void switchRoles(){
+    for(Connection con: connections) {
+      con.switchRoles();}
+  }
+
+  public boolean shouldSwitch() {
+    //check position of other player
+    //check number of up and down connections within 6 cells
+    //if up>=down switch roles
+    int otherIdx = (currentPuppetIndex + 1) % numberOfPlayers;
+    int oppLocation = puppets.get(otherIdx).getCellIndex();
+    int ups = 0;
+    int downs = 0;
+    //array of possible locations of opponent
+    for (int i = 1; i <= 6; i++) {
+      //possibleLocations[i] = cellToLocation(cells);
+      Connection con = getConnectionAt(cellToLocation(oppLocation + i));
+      if (con.isUp()) {
+        ups++;
+      } else {
+        downs++;} }
+    if (ups >= downs) {
+      return true;}
+
+    return false;
+  }
+
+
+
+
+
 }

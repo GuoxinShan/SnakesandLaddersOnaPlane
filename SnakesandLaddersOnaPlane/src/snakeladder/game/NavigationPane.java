@@ -22,6 +22,7 @@ public class NavigationPane extends GameGrid
         roll(getDieValue());
         delay(1000);
         handBtn.show(0);
+        autoSwitch();
       }
     }
 
@@ -328,6 +329,8 @@ public class NavigationPane extends GameGrid
     return totalNbAtThisTurn == numberOfDice;
   }
 
+  //if puppet is in auto mode, check if roles of connections should switch
+  //if roles are switches set the corresponding toggle to correct mode
   private void autoSwitch(){
     if(gp.getPuppet().isAuto()){
       if(gp.shouldSwitch()){

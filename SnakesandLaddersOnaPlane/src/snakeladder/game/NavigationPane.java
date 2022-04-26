@@ -76,7 +76,6 @@ public class NavigationPane extends GameGrid
   private boolean isToggle = false;
   private GGCheckButton toggleCheck =
           new GGCheckButton("Toggle Mode", YELLOW, TRANSPARENT, isToggle);
-
   private int nbRolls = 0;
   private volatile boolean isGameOver = false;
   private Properties properties;
@@ -311,6 +310,8 @@ public class NavigationPane extends GameGrid
     }
   }
 
+  //if puppet is in auto mode, check if roles of connections should switch
+  //if roles are switches set the corresponding toggle to correct mode
   private void autoSwitch(){
     if(gp.getPuppet().isAuto()){
       if(gp.shouldSwitch()){

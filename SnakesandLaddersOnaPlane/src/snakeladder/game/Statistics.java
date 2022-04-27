@@ -9,12 +9,12 @@ public class Statistics {
      Map<String, Integer> connectionStatistics = new HashMap<String, Integer>();
 
 
-    Statistics(){
-        initializeStatistics();
+    Statistics(int numberOfDice){
+        initializeStatistics(numberOfDice);
     }
     //initialize user rolling statistics
-    void initializeStatistics() {
-        for (int i = 1; i <= 12; i++) {
+    void initializeStatistics(int numberOfDice) {
+        for (int i = 1; i <= 6*numberOfDice; i++) {
             userRollingStatistics.put(i, 0);
         }
         connectionStatistics.put("up", 0);
@@ -35,6 +35,14 @@ public class Statistics {
         int count = userRollingStatistics.get(diceValue);
         userRollingStatistics.put(diceValue, count + 1);
 
+    }
+
+    Integer getConnectionsStats(String direction){
+        return connectionStatistics.get(direction);
+    }
+
+    Integer getUserStats(int i){
+        return userRollingStatistics.get(i);
     }
 
 

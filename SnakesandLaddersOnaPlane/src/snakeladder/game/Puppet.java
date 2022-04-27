@@ -23,7 +23,7 @@ public class Puppet extends Actor
     super(puppetImage);
     this.gamePane = gp;
     this.navigationPane = np;
-    this.statistics = new Statistics();
+    this.statistics = new Statistics(np.getNumberOfDice());
   }
 
   public boolean isAuto() {
@@ -207,12 +207,18 @@ public class Puppet extends Actor
   public void setGamePane(GamePane gamePane2) {
   }
 
-  Integer getUserStats(int i){
-    return statistics.userRollingStatistics.get(i);
+  String getRollingStats(int numberOfDice){
+    String rollingResult =puppetName+" rolled :";
+    for(int i=1;i<=6*numberOfDice;i++) {
+      rollingResult = rollingResult + i + "-" + statistics.getUserStats(i) + " ";
+    }
+    return rollingResult;
   }
 
-  Integer getConnectionsStats(String direction){
-    return statistics.connectionStatistics.get(direction);
+  
+
+  String getConnectionStats(){
+    return puppetName+" traversed: up-"+statistics.getConnectionsStats("up")+" down-"+statistics.getConnectionsStats("down");
   }
 
 }

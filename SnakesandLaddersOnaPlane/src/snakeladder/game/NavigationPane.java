@@ -177,6 +177,10 @@ public class NavigationPane extends GameGrid
     die6Button.addButtonListener(manualDieButton);
   }
 
+  int getNumberOfDice(){
+    return numberOfDice;
+  }
+
   private int getDieValue() {
     if (dieValues == null) {
       return RANDOM_ROLL_TAG;
@@ -268,6 +272,7 @@ public class NavigationPane extends GameGrid
   }
 
 
+
   void prepareRoll(int currentIndex)
   {
     if (currentIndex == 100)  // Game over
@@ -281,16 +286,8 @@ public class NavigationPane extends GameGrid
 
       java.util.List  <String> playerPositions = new ArrayList<>();
       for (Puppet puppet: gp.getAllPuppets()) {
-        String rollingResult = puppet.getPuppetName()+" rolled :";
-        for(int i=1;i<=12;i++) {
-          //rollingResult = rollingResult + i + "-" + puppet.userRollingStatistics.get(i) + " ";
-          rollingResult = rollingResult + i + "-" + puppet.getUserStats(i) + " ";
-        }
-        //String connectionResult = puppet.getPuppetName()+" traversed: up-"+puppet.connectionStatistics.get("up")+" down-"+puppet.connectionStatistics.get("down");
-        String connectionResult = puppet.getPuppetName()+" traversed: up-"+puppet.getConnectionsStats("up")+" down-"+puppet.getConnectionsStats("down");
-        showResult(rollingResult);
-        showResult(connectionResult);
-
+        showResult(puppet.getRollingStats(numberOfDice));
+        showResult( puppet.getConnectionStats());
         playerPositions.add(puppet.getCellIndex() + "");
       }
       gamePlayCallback.finishGameWithResults(nbRolls % gp.getNumberOfPlayers(), playerPositions);

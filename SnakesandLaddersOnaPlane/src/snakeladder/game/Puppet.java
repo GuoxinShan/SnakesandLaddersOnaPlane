@@ -2,8 +2,6 @@ package snakeladder.game;
 
 import ch.aplu.jgamegrid.*;
 import java.awt.Point;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Puppet extends Actor
 {
@@ -16,17 +14,16 @@ public class Puppet extends Actor
   private int dy;
   private boolean isAuto;
   private String puppetName;
+  private Statistics statistics;
 
-  //user rolling statistics
-  public Map<Integer, Integer> userRollingStatistics = new HashMap<Integer,Integer>();
-  public Map<String,Integer> connectionStatistics = new HashMap<String,Integer>();
+
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
     super(puppetImage);
     this.gamePane = gp;
     this.navigationPane = np;
-    initializeStatistics();
+    this.statistics = new Statistics();
   }
 
   public boolean isAuto() {
@@ -54,7 +51,7 @@ public class Puppet extends Actor
     }
     this.nbSteps = nbSteps;
     if(nbSteps >0){
-      updateUserRollingStatistics(nbSteps);
+      statistics.updateUserRollingStatistics(nbSteps);
     }
     setActEnabled(true);
   }
@@ -67,31 +64,6 @@ public class Puppet extends Actor
 
   int getCellIndex() {
     return cellIndex;
-  }
-
-  //initialize user rolling statistics
-  private void initializeStatistics() {
-    for (int i = 1; i <= 12; i++) {
-      userRollingStatistics.put(i, 0);
-    }
-    connectionStatistics.put("up", 0);
-    connectionStatistics.put("down", 0);
-    
-  }
-
-  private void updateConnectionStatistics(boolean isUp) {
-    if (isUp) {
-      connectionStatistics.put("up", connectionStatistics.get("up") + 1);
-    } else {
-      connectionStatistics.put("down", connectionStatistics.get("down") + 1);
-    }
-    
-  }
-
-  private void updateUserRollingStatistics(int diceValue) {
-    int count = userRollingStatistics.get(diceValue);
-    userRollingStatistics.put(diceValue, count + 1);
-    
   }
   
   //move puppet backforward one cell
@@ -152,13 +124,13 @@ public class Puppet extends Actor
         {
           navigationPane.showStatus("Digesting...");
           navigationPane.playSound(GGSound.MMM);
-          updateConnectionStatistics(false);
+          statistics.updateConnectionStatistics(false);
         }
         else
         {
           navigationPane.showStatus("Climbing...");
           navigationPane.playSound(GGSound.BOING);
-          updateConnectionStatistics(true);
+          statistics.updateConnectionStatistics(true);
         }
       }
       else
@@ -208,8 +180,6 @@ public class Puppet extends Actor
       
     }
 
-    
-
     if(nbSteps == -1){
       moveBack();
       nbSteps++;
@@ -235,6 +205,14 @@ public class Puppet extends Actor
   }
 
   public void setGamePane(GamePane gamePane2) {
+  }
+
+  Integer getUserStats(int i){
+    return statistics.userRollingStatistics.get(i);
+  }
+
+  Integer getConnectionsStats(String direction){
+    return statistics.connectionStatistics.get(direction);
   }
 
 }

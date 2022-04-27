@@ -283,9 +283,11 @@ public class NavigationPane extends GameGrid
       for (Puppet puppet: gp.getAllPuppets()) {
         String rollingResult = puppet.getPuppetName()+" rolled :";
         for(int i=1;i<=12;i++) {
-          rollingResult = rollingResult + i + "-" + puppet.userRollingStatistics.get(i) + " ";
+          //rollingResult = rollingResult + i + "-" + puppet.userRollingStatistics.get(i) + " ";
+          rollingResult = rollingResult + i + "-" + puppet.getUserStats(i) + " ";
         }
-        String connectionResult = puppet.getPuppetName()+" traversed: up-"+puppet.connectionStatistics.get("up")+" down-"+puppet.connectionStatistics.get("down");
+        //String connectionResult = puppet.getPuppetName()+" traversed: up-"+puppet.connectionStatistics.get("up")+" down-"+puppet.connectionStatistics.get("down");
+        String connectionResult = puppet.getPuppetName()+" traversed: up-"+puppet.getConnectionsStats("up")+" down-"+puppet.getConnectionsStats("down");
         showResult(rollingResult);
         showResult(connectionResult);
 

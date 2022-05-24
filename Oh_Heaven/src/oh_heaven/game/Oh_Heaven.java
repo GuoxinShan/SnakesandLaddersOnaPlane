@@ -28,7 +28,7 @@ public class Oh_Heaven extends CardGame {
 
 	final String trumpImage[] = { "bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif" };
 
-	static Random random ;
+	static Random random;
 
 	// return random Enum value
 	public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
@@ -56,10 +56,10 @@ public class Oh_Heaven extends CardGame {
 				if (pack.isEmpty())
 					return;
 				Card dealt = randomCard(pack);
-				// System.out.println("Cards = " + dealt);
+
 				dealt.removeFromHand(false);
 				hands[j].insert(dealt, false);
-				// dealt.transfer(hands[j], true);
+
 			}
 		}
 	}
@@ -71,7 +71,7 @@ public class Oh_Heaven extends CardGame {
 	private final String version = "1.0";
 	public final int nbPlayers = 4;
 	// public final int nbStartCards = 13;
-	public  int nbStartCards ;
+	public int nbStartCards;
 	// public final int nbRounds = 3;
 	public final int nbRounds = PropertiesLoader.getRounds(properties);
 	public final int madeBidBonus = 10;
@@ -88,7 +88,6 @@ public class Oh_Heaven extends CardGame {
 			new Location(575, 675),
 			new Location(25, 575),
 			new Location(575, 25),
-			// new Location(650, 575)
 			new Location(575, 575)
 	};
 	private Actor[] scoreActors = { null, null, null, null };
@@ -96,7 +95,7 @@ public class Oh_Heaven extends CardGame {
 	private final Location textLocation = new Location(350, 450);
 	private final int thinkingTime = 2000;
 
-	private Strategy[] strategies; ////////////////////
+	private Strategy[] strategies;
 
 	private Hand[] hands;
 	private Location hideLocation = new Location(-500, -500);
@@ -168,9 +167,7 @@ public class Oh_Heaven extends CardGame {
 				bids[iP] += random.nextBoolean() ? -1 : 1;
 			}
 		}
-		// for (int i = 0; i < nbPlayers; i++) {
-		// bids[i] = nbStartCards / 4 + 1;
-		// }
+
 	}
 
 	private Card selected;
@@ -198,18 +195,14 @@ public class Oh_Heaven extends CardGame {
 		for (int i = 0; i < nbPlayers; i++) {
 			layouts[i] = new RowLayout(handLocations[i], handWidth);
 			layouts[i].setRotationAngle(90 * i);
-			// layouts[i].setStepDelay(10);
 			hands[i].setView(this, layouts[i]);
 			hands[i].setTargetArea(new TargetArea(trickLocation));
 			hands[i].draw();
 		}
-		// for (int i = 1; i < nbPlayers; i++) // This code can be used to visually hide
-		// the cards in a hand (make them face down)
-		// hands[i].setVerso(true); // You do not need to use or change this code.
-		// End graphics
+
 	}
 
-	Card selectCardUser(int playerIndex) { ///////////////////////////////
+	Card selectCardUser(int playerIndex) { 
 		this.selected = null;
 		hands[playerIndex].setTouchEnabled(true);
 		while (null == selected)
@@ -235,23 +228,7 @@ public class Oh_Heaven extends CardGame {
 		for (int i = 0; i < nbStartCards; i++) {
 			trick = new Hand(deck);
 			selected = null;
-			/*
-			 * // if (false) {
-			 * if (0 == nextPlayer) { // Select lead depending on player type
-			 * /////////////////////
-			 * hands[0].setTouchEnabled(true);
-			 * setStatus("Player 0 double-click on card to lead.");
-			 * while (null == selected) delay(100);
-			 * } else {
-			 * setStatusText("Player " + nextPlayer + " thinking...");
-			 * ////////////////////////
-			 * delay(thinkingTime);
-			 * selected = randomCard(hands[nextPlayer]);
-			 * }
-			 */
 
-			// selected = this.strategies[nextPlayer].selectLeadCard(hands[nextPlayer],
-			// trumps);
 			selected = this.strategies[nextPlayer].selectLeadCard(hands[nextPlayer], new AccessibleInfo(trumps, null));
 
 			// Lead with selected card
@@ -269,21 +246,6 @@ public class Oh_Heaven extends CardGame {
 					nextPlayer = 0; // From last back to first
 				selected = null;
 
-				/*
-				 * // if (false) {
-				 * if (0 == nextPlayer) {
-				 * hands[0].setTouchEnabled(true);
-				 * setStatus("Player 0 double-click on card to follow.");
-				 * while (null == selected) delay(100);
-				 * } else {
-				 * setStatusText("Player " + nextPlayer + " thinking...");
-				 * delay(thinkingTime);
-				 * selected = randomCard(hands[nextPlayer]);
-				 * }
-				 */
-
-				// selected = this.strategies[nextPlayer].selectCard(hands[nextPlayer], trumps,
-				// lead, winningCard);
 				selected = this.strategies[nextPlayer].selectCard(hands[nextPlayer], new AccessibleInfo(trumps, lead));
 				// Follow with selected card
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards() + 2) * trickWidth));
@@ -307,10 +269,7 @@ public class Oh_Heaven extends CardGame {
 				selected.transfer(trick, true); // transfer to trick (includes graphic effect)
 				System.out.println("winning: " + winningCard);
 				System.out.println(" played: " + selected);
-				// System.out.println("winning: suit = " + winningCard.getSuit() + ", rank = " +
-				// (13 - winningCard.getRankId()));
-				// System.out.println(" played: suit = " + selected.getSuit() + ", rank = " +
-				// (13 - selected.getRankId()));
+
 				if ( // beat current winner with higher card
 				(selected.getSuit() == winningCard.getSuit() && rankGreater(selected, winningCard)) ||
 				// trumped when non-trump was winning
@@ -342,13 +301,8 @@ public class Oh_Heaven extends CardGame {
 		random = PropertiesLoader.getSeed(properties);
 		nbStartCards = PropertiesLoader.getStartCards(properties);
 		enforceRules = PropertiesLoader.getEnforceRules(properties);
-		
-		this.strategies = PropertiesLoader.getPlayers(properties, nbPlayers, this, thinkingTime); ////////////////////////////////
-		// this.strategies[0] = new PlayerStrategy(this, 0); // 0:User
-		// for (int i = 1; i < nbPlayers; i++) {
-		// 	// this.strategies[i] = new LegalStrategy(this, i, this.thinkingTime);
-		// 	this.strategies[i] = new SmartStrategy(this, i, this.thinkingTime);
-		// }
+
+		this.strategies = PropertiesLoader.getPlayers(properties, nbPlayers, this, thinkingTime);
 
 		for (int i = 0; i < nbRounds; i++) {
 			initTricks();
@@ -381,14 +335,13 @@ public class Oh_Heaven extends CardGame {
 	}
 
 	public static void main(String[] args) {
-		// System.out.println("Working Directory = " + System.getProperty("user.dir"));
 		System.out.println();
 		if (args == null || args.length == 0) {
 			properties = PropertiesLoader.loadPropertiesFile(null);
 		} else {
 			properties = PropertiesLoader.loadPropertiesFile(args[0]);
 		}
-		
+
 		new Oh_Heaven();
 	}
 

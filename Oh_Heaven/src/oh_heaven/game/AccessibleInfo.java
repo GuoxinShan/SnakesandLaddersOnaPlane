@@ -7,14 +7,13 @@ public class AccessibleInfo {
 	
 		Suit trumps;
 		Suit lead;
-		//Card winningCard;
 
-		//public AccessibleInfo(Suit trumps, Suit lead, Card winningCard) {
+
 
 		public AccessibleInfo(Suit trumps, Suit lead) {
 			this.trumps = trumps;
 			this.lead = lead;
-			//this.winningCard = winningCard;
+	
 		}
 
 		public Suit getTrumps() {
@@ -25,8 +24,5 @@ public class AccessibleInfo {
 			return lead;
 		}
 
-		//public Card getWinningCard() {
-		//	return winningCard;
-		//}
-	//}
+
 }

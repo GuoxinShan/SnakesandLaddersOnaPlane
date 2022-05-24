@@ -9,6 +9,7 @@ import java.util.Random;
 import oh_heaven.game.LegalStrategy;
 import oh_heaven.game.Oh_Heaven;
 import oh_heaven.game.PlayerStrategy;
+import oh_heaven.game.RandomStrategy;
 import oh_heaven.game.SmartStrategy;
 import oh_heaven.game.Strategy;
 
@@ -67,7 +68,7 @@ public class PropertiesLoader {
     }
 
     public static boolean getEnforceRules(Properties prop){
-        String enforceRuleProp = prop.getProperty("enforceRule");
+        String enforceRuleProp = prop.getProperty("enforceRules");
         boolean enforceRule = false;
         if (enforceRuleProp != null) enforceRule = Boolean.parseBoolean(enforceRuleProp);
         return enforceRule;
@@ -87,7 +88,7 @@ public class PropertiesLoader {
                 players[i] =new SmartStrategy(oh_heaven, i, thinkingTime);
             }
             else if (playerType.equals("random")){
-                players[i] =new LegalStrategy(oh_heaven, i, thinkingTime);
+                players[i] =new RandomStrategy(oh_heaven, i, thinkingTime);
             }
             else{
                 System.out.println("Unknown player type: " + playerType);

@@ -15,7 +15,7 @@ import oh_heaven.game.Strategy;
 
 public class PropertiesLoader {
 
-    private final static String PATH = "../properties/";
+    private final static String PATH = "properties/";
     private final static String DEFAULT_PROPERTIES = "runmode.properties";
     private static PropertiesLoader single_instance = null;
 

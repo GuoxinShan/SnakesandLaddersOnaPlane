@@ -16,6 +16,9 @@ public class Oh_Heaven extends CardGame {
 
 	static Properties properties;
 
+	//Singleton
+	static PropertiesLoader propertiesLoader = PropertiesLoader.getInstance();
+
 	public enum Suit {
 		SPADES, HEARTS, DIAMONDS, CLUBS
 	}
@@ -73,7 +76,7 @@ public class Oh_Heaven extends CardGame {
 	// public final int nbStartCards = 13;
 	public int nbStartCards;
 	// public final int nbRounds = 3;
-	public final int nbRounds = PropertiesLoader.getRounds(properties);
+	public final int nbRounds = propertiesLoader.getRounds(properties);
 	public final int madeBidBonus = 10;
 	private final int handWidth = 400;
 	private final int trickWidth = 40;
@@ -298,11 +301,11 @@ public class Oh_Heaven extends CardGame {
 		initScores();
 		initScore();
 
-		random = PropertiesLoader.getSeed(properties);
-		nbStartCards = PropertiesLoader.getStartCards(properties);
-		enforceRules = PropertiesLoader.getEnforceRules(properties);
+		random = propertiesLoader.getSeed(properties);
+		nbStartCards = propertiesLoader.getStartCards(properties);
+		enforceRules = propertiesLoader.getEnforceRules(properties);
 
-		this.strategies = PropertiesLoader.getPlayers(properties, nbPlayers, this, thinkingTime);
+		this.strategies = propertiesLoader.getPlayers(properties, nbPlayers, this, thinkingTime);
 
 		for (int i = 0; i < nbRounds; i++) {
 			initTricks();
@@ -337,9 +340,9 @@ public class Oh_Heaven extends CardGame {
 	public static void main(String[] args) {
 		System.out.println();
 		if (args == null || args.length == 0) {
-			properties = PropertiesLoader.loadPropertiesFile(null);
+			properties = propertiesLoader.loadPropertiesFile(null);
 		} else {
-			properties = PropertiesLoader.loadPropertiesFile(args[0]);
+			properties = propertiesLoader.loadPropertiesFile(args[0]);
 		}
 
 		new Oh_Heaven();
